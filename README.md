@@ -1,152 +1,125 @@
 # 🤖 AI POS - Intelligent Point of Sale System
 
-> A next-generation Point of Sale system supercharged with AI for automated bill scanning, smart inventory management, and intelligent analytics.
+> A premium, next-generation Point of Sale system supercharged with local AI for automated bill scanning, smart inventory management, and intelligent analytics. Built for high performance, ease of use, and zero-config local operations with seamless production readiness.
 
-![Project Status](https://img.shields.io/badge/Status-Active_Development-green)
-![Tech Stack](https://img.shields.io/badge/Stack-MERN_%2B_Firebase-blue)
-![AI Power](https://img.shields.io/badge/AI-LangChain_%2B_HuggingFace-purple)
+[![Build Status](https://img.shields.io/badge/Build-Passing-emerald)](https://github.com/Jaya-Dutta/AI-POS-SYSTEM)
+[![Tech Stack](https://img.shields.io/badge/Stack-React_%2B_Node.js-blue)](https://github.com/Jaya-Dutta/AI-POS-SYSTEM)
+[![Database](https://img.shields.io/badge/Database-Firestore_%2F_Local_Fallback-orange)](https://github.com/Jaya-Dutta/AI-POS-SYSTEM)
+[![OCR Engine](https://img.shields.io/badge/OCR-Tesseract.js_%2B_Jimp-purple)](https://github.com/Jaya-Dutta/AI-POS-SYSTEM)
 
-## ✨ Key Features
+---
 
-### 🧠 AI-Powered Intelligence
-- **Smart Categorization**: Automatically categorizes new products using **LLMs (OpenAI/LangChain)**.
-- **OCR Bill Scanning**: Upload bill images to automatically extract items and prices using **Hugging Face** models (`microsoft/trocr-base-printed`).
-- **Sales Insights**: Generate AI summaries of your sales trends and performance.
+## ✨ Features
+
+### 🧠 Intelligent OCR Bill Scanning (Local & Accurate)
+- **Zero-Config OCR**: Upload image bills (JPG, JPEG, PNG) to automatically extract items, quantities, and prices.
+- **Pure Local Execution**: Runs entirely in the browser/node environment via `Tesseract.js` without mandatory cloud API tokens.
+- **Image Preprocessing Pipeline**: Built-in `Jimp` image processing automatically resizes, converts to grayscale, adjusts contrast, and applies local luminance thresholding (binarization) to dramatically improve text recognition.
+- **Smart Parsing Heuristics**: Automatically detects multiple receipt line patterns and filters out header/footer metadata (tax, total, change, phone numbers) so only purchased items enter the POS cart.
 
 ### 🏪 Core POS Capabilities
-- **Fast Checkout**: Efficient point-of-sale interface with product search and cart management.
-- **Inventory Management**: Real-time tracking of stock levels, costs, and pricing.
-- **Customer CRM**: Manage customer profiles and purchase history.
-- **Dynamic Reports**: Visual analytics for revenue, top products, and inventory value.
-
-### 🎨 Modern Experience
-- **Sleek UI**: Fully responsive Dark/Light mode design using Tailwind CSS.
-- **Secure**: Authentication ready (Firebase).
+- **Fast Checkout**: Add products to the cart from the UI catalog or OCR uploads.
+- **Dynamic Catalog Mapping**: Automatically matches parsed OCR item names to existing inventory products to link pricing and decrement stock. Unmatched items receive temporary unique IDs, letting you modify or delete them without cart state conflicts.
+- **Inventory Management**: Real-time tracking of stock levels, costs, and retail prices.
+- **Customer & Vendor CRM**: Keep track of customer profiles and wholesale vendor details.
+- **Analytics & Reporting**: Sales summary reports, inventory valuations, and top-selling product insights.
 
 ---
 
-## 🚀 Quick Start (Windows)
+## 🛠️ Tech Stack
 
-The easiest way to run the entire system (Frontend + Backend):
-
-```powershell
-./start.ps1
-```
-
-This script will:
-1. Check and install dependencies for both frontend and backend.
-2. Verify environment configuration.
-3. Launch both servers in a coordinated manner.
+- **Frontend**: React 18, Vite, Tailwind CSS, Lucide Icons, Context API (Theme management)
+- **Backend**: Node.js, Express, Cors, Multer (file handling)
+- **OCR & Processing**: Tesseract.js, Jimp
+- **Database & Auth**: Firebase Admin SDK (Production) & Local JSON Database Fallback (`db.json` / static file serving) for zero-config setups.
 
 ---
 
-## 🛠️ Manual Installation & Setup
+## 🚀 Installation & Local Setup
 
-If you are on macOS/Linux or prefer manual control, follow these steps.
+### Prerequisites
+- Node.js (v16 or higher)
+- npm (v8 or higher)
 
-### 1. Prerequisites
-- **Node.js** (v16+)
-- **Firebase Project** (Firestore enabled)
-- **Hugging Face Account** (for OCR)
-- **OpenAI API Key** (optional, for Smart Categorization)
+### Setup Steps
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/Jaya-Dutta/AI-POS-SYSTEM.git
+   cd AI-POS-SYSTEM
+   ```
 
-### 2. Install Dependencies
+2. **Install Dependencies**:
+   *Frontend*:
+   ```bash
+   npm install
+   ```
+   *Backend*:
+   ```bash
+   cd server
+   npm install
+   cd ..
+   ```
 
-**Frontend:**
-```bash
-npm install
-```
+3. **Start the Application**:
+   *Frontend (Port 3000)*:
+   ```bash
+   npm run dev
+   ```
+   *Backend (Port 4000)*:
+   ```bash
+   cd server
+   npm run dev
+   ```
 
-**Backend:**
-```bash
-cd server
-npm install
-```
+4. Open **`http://localhost:3000`** in your browser, click **Get Started**, and log in with any dummy email/password (e.g. `test@example.com` / `password`) to access the dashboard!
 
-### 3. Environment Configuration
+---
 
-Create a `.env` file in the `server` directory (`server/.env`) with the following credentials:
+## 🔧 Environment Configuration
+
+To customize credentials, create a `.env` file in the `server` directory:
 
 ```env
 PORT=4000
-CORS_ORIGIN=http://localhost:5173
+DISABLE_AUTH=true
+USE_MOCK_DB=true
+CORS_ORIGIN=http://localhost:3000,http://localhost:5173
 
-# --- Firebase Admin SDK ---
-# Option 1: JSON String (Recommended for local dev)
-FIREBASE_SERVICE_ACCOUNT={"type":"service_account","project_id":"..."}
+# --- Optional Cloud Services ---
+# Firebase Admin credentials (if using Cloud Firestore instead of local mock)
+# FIREBASE_SERVICE_ACCOUNT={"type":"service_account","project_id":"..."}
 
-# Option 2: Individual Fields
-# FIREBASE_PROJECT_ID=your-project-id
-# FIREBASE_CLIENT_EMAIL=your-client-email
-# FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n"
-
-# --- AI Configuration ---
-# Hugging Face (Required for OCR Bill Scanning)
-HF_API_TOKEN=your_huggingface_token
-HUGGINGFACE_OCR_MODEL=microsoft/trocr-base-printed
-
-# OpenAI (Required for Smart Categorization & Summaries)
-OPENAI_API_KEY=your_openai_api_key
-# LLM_MODEL=gpt-4o-mini (default)
-
-# --- Dev Options ---
-DISABLE_AUTH=false
+# Hugging Face token (if preferring cloud OCR over local Tesseract)
+# HF_API_TOKEN=your_huggingface_token
+# USE_HF_OCR=true
 ```
-
-### 4. Running the Application
-
-**Start the Backend:**
-```bash
-cd server
-npm run dev
-```
-
-**Start the Frontend:**
-```bash
-# In a new terminal
-npm run dev
-```
-
-Visit `http://localhost:5173` to rely on the app.
 
 ---
 
-## 🏗️ Technical Architecture
+## 🌍 Production Deployment Guide
 
-### Frontend (User Interface)
-- **React 18** & **Vite**: Blazing fast SPA architecture.
-- **Tailwind CSS**: Utility-first styling for a premium feel.
-- **Lucide React**: Beautiful, consistent iconography.
+### Frontend Deployment (Vercel)
+The project includes a `vercel.json` file configured for SPA single-page routing:
+1. Log in to [Vercel](https://vercel.com) and link your GitHub account.
+2. Select **Add New Project** and import the `AI-POS-SYSTEM` repository.
+3. Configure the following environment variable:
+   - `VITE_API_BASE`: Set to your deployed Render backend URL (e.g., `https://ai-pos-backend.onrender.com`).
+4. Click **Deploy**. Vercel will automatically build the Vite assets and serve them.
 
-### Backend (Server & Logic)
-- **Node.js & Express**: Robust API layer.
-- **Firebase Admin**: Secure interaction with Firestore and Storage.
-- **LangChain.js**: Orchestrates LLM interactions for product intelligence.
-- **Multer**: Handles file uploads for bill scanning.
-
----
-
-## 📚 API Reference
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/products` | List all inventory items |
-| `POST` | `/api/transactions` | Process a new sale |
-| `POST` | `/api/upload` | Upload bill image for OCR |
-| `GET` | `/api/reports/sales` | Get sales analytics |
+### Backend Deployment (Render)
+The project includes a `render.yaml` Blueprint file for fully automated backend deployments:
+1. Log in to [Render](https://render.com) and link your GitHub account.
+2. Click **New** -> **Blueprint Route** and connect your `AI-POS-SYSTEM` repository.
+3. Render will read the `render.yaml` specification and set up the web service using:
+   - Root Directory: `server`
+   - Build Command: `npm install`
+   - Start Command: `npm start`
+4. Set the following environment variable in the Render dashboard under **Environment**:
+   - `CORS_ORIGIN`: Set to your Vercel frontend domain (e.g., `https://your-app.vercel.app`).
+5. Click **Apply**. Render will deploy the backend API.
 
 ---
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
----
-
-## 📄 License
-
-Distributed under the MIT License.
+Contributions are welcome! Please fork the repository, make your changes on a feature branch, and submit a pull request.
