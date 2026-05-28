@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: ai-pos-backend
+    env: node
+    plan: free
+    rootDir: server
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: NODE_ENV
+        value: production
+      - key: DISABLE_AUTH
+        value: "true"
+      - key: USE_MOCK_DB
+        value: "true"
+      - key: CORS_ORIGIN
+        value: "*"
