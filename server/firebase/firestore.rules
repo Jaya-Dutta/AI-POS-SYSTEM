@@ -1,0 +1,35 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isOwner() {
+      return request.auth != null && request.auth.uid == resource.data.ownerUid;
+    }
+    function setOwner() {
+      return request.auth != null && request.resource.data.ownerUid == request.auth.uid;
+    }
+
+    match /products/{id} {
+      allow read: if isOwner();
+      allow create: if setOwner();
+      allow update, delete: if isOwner();
+    }
+
+    match /customers/{id} {
+      allow read: if isOwner();
+      allow create: if setOwner();
+      allow update, delete: if isOwner();
+    }
+
+    match /vendors/{id} {
+      allow read: if isOwner();
+      allow create: if setOwner();
+      allow update, delete: if isOwner();
+    }
+
+    match /transactions/{id} {
+      allow read: if isOwner();
+      allow create: if setOwner();
+      allow update, delete: if false; // lock edits to sales records
+    }
+  }
+}
